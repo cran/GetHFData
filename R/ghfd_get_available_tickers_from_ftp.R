@@ -7,16 +7,16 @@
 #' @param my.date A single date to check tickers in ftp (e.g. '2015-11-03')
 #' @inheritParams ghfd_get_HF_data
 #'
-#' @return A vector with the number of trades for each ticker found in file
+#' @return A data.frame with the tickers, number of found trades and file name
 #' @export
 #'
 #' @examples
 #'
 #' \dontrun{
-#'  available.tickers <- ghfd_get_available_tickers_from_ftp(my.date = '2015-11-03',
+#'  df.tickers <- ghfd_get_available_tickers_from_ftp(my.date = '2015-11-03',
 #'  type.market = 'BMF')
 #'
-#'  print(available.tickers)
+#'  print(head(df.tickers))
 #' }
 ghfd_get_available_tickers_from_ftp <- function(my.date = '2015-11-03',
                                                 type.market = 'equity',
@@ -48,7 +48,18 @@ ghfd_get_available_tickers_from_ftp <- function(my.date = '2015-11-03',
   # get contents
   df.ftp <- ghfd_get_ftp_contents(type.market = type.market)
 
-  idx <- df.ftp$dates == my.date
+  idx <- which(df.ftp$dates == my.date)
+
+  if  (length(idx)==0){
+
+    closest.date <- df.ftp$dates[which.min(abs(df.ftp$dates - my.date))]
+
+    warning(paste('Cant find date', my.date,' in ftp. Selecting the closest date,',closest.date))
+
+    idx <- which(df.ftp$dates == closest.date)
+
+  }
+
   files.to.dl <- df.ftp$files[idx]
 
   my.links <- paste0(my.ftp, files.to.dl)
@@ -59,12 +70,20 @@ ghfd_get_available_tickers_from_ftp <- function(my.date = '2015-11-03',
   ghfd_download_file(my.url, out.file, max.dl.tries)
 
   suppressWarnings(
-    my.df <- readr::read_csv2(file = out.file, skip = 1, progress = F, col_names = F)
+    my.df <- readr::read_csv2(file = out.file,
+                              skip = 1,
+                              progress = F,
+                              col_names = F,
+                              col_types = readr::cols() )
   )
+
 
   out <- sort(table(my.df$X2), decreasing = T)
 
-  return(out)
+  df.out <- data.frame(tickers = names(out),
+                       n.trades = as.numeric(out),
+                       f.name = out.file)
+  return(df.out)
 
 }
 

@@ -10,7 +10,7 @@ ghfd_get_available_tickers_from_file(out.file)
 \item{out.file}{Name of downloaded file with HFT data from Bovespa}
 }
 \value{
-A vector with the number of trades for each ticker found in file
+A dataframe with the  number of trades for each ticker found in file
 }
 \description{
 This function will read the zip file downloaded from Bovespa and output
@@ -22,8 +22,8 @@ and the numeric values as the number of trades for each ticker
 ## get file from package (usually this would be been downloaded from the ftp)
 out.file <- system.file("extdata", 'NEG_OPCOES_20151126.zip', package = "GetHFData")
 
-available.tickers <- ghfd_get_available_tickers_from_file(out.file)
+df.tickers <- ghfd_get_available_tickers_from_file(out.file)
 
-print(available.tickers)
+print(head(df.tickers))
 }
 

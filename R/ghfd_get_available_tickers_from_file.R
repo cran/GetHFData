@@ -6,7 +6,7 @@
 #'
 #' @inheritParams ghfd_download_file
 #'
-#' @return A vector with the number of trades for each ticker found in file
+#' @return A dataframe with the  number of trades for each ticker found in file
 #' @export
 #'
 #' @examples
@@ -14,9 +14,9 @@
 #' ## get file from package (usually this would be been downloaded from the ftp)
 #' out.file <- system.file("extdata", 'NEG_OPCOES_20151126.zip', package = "GetHFData")
 #'
-#' available.tickers <- ghfd_get_available_tickers_from_file(out.file)
+#' df.tickers <- ghfd_get_available_tickers_from_file(out.file)
 #'
-#' print(available.tickers)
+#' print(head(df.tickers))
 ghfd_get_available_tickers_from_file <- function(out.file){
 
   if (length(out.file)!=1){
@@ -25,12 +25,20 @@ ghfd_get_available_tickers_from_file <- function(out.file){
   }
 
   suppressWarnings(
-    my.df <- readr::read_csv2(file = out.file, skip = 1, progress = F, col_names = F)
+    my.df <- readr::read_csv2(file = out.file,
+                              skip = 1,
+                              progress = F,
+                              col_names = F,
+                              col_types = readr::cols() )
   )
 
   out <- sort(table(my.df$X2), decreasing = T)
 
-  return(out)
+  df.out <- data.frame(tickers = names(out),
+                       n.trades = as.numeric(out),
+                       f.name = out.file)
+  return(df.out)
+
 
 }
 

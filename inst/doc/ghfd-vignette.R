@@ -2,12 +2,12 @@
 library(GetHFData)
 
 out.file <- system.file("extdata", 'NEG_OPCOES_20151126.zip', package = "GetHFData")
-tickers.out <- ghfd_get_available_tickers_from_file(out.file)
-print(tickers.out[1:10]) # show only 10
+df.tickers <- ghfd_get_available_tickers_from_file(out.file)
+print(head(df.tickers)) # show only 10
 
 ## ----example2------------------------------------------------------------
 
-my.assets <- names(tickers.out[1:3]) # ticker to find in zip file
+my.assets <- df.tickers$tickers[1:3] # ticker to find in zip file
 
 start.time <- '10:00:00' # defines first time period of day
 last.time <- '17:00:00'  # defines last time period of day
@@ -54,7 +54,6 @@ print(p)
 #                             first.time = first.time,
 #                             last.time = last.time,
 #                             type.output = type.output,
-#                             agg.diff = agg.diff,
-#                             clean.files = F)
+#                             agg.diff = agg.diff)
 #  
 

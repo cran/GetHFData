@@ -4,7 +4,7 @@
 \alias{ghfd_read_file}
 \title{Reads zip file downloaded from Bovespa ftp}
 \usage{
-ghfd_read_file(out.file, my.assets, first.time = "10:00:00",
+ghfd_read_file(out.file, my.assets = NULL, first.time = "10:00:00",
   last.time = "17:00:00", type.output = "agg", agg.diff = "15 min")
 }
 \arguments{

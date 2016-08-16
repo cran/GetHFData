@@ -115,6 +115,12 @@ ghfd_get_HF_data <- function(my.assets,
                paste(possible.char, collapse = ', ')))
   }
 
+  # check my.assets
+  my.assets <- as.character(my.assets)
+  if (class(my.assets)!='character'){
+    stop('The input my.assets should have class equal to character')
+  }
+
   # create directory
 
   if (!dir.exists(dl.dir)) {
@@ -142,8 +148,8 @@ ghfd_get_HF_data <- function(my.assets,
   df.ftp <- ghfd_get_ftp_contents(type.market = type.market)
 
   cat('\n   Found ', nrow(df.ftp), ' files in ftp')
-  cat('\n   First Date in ftp: ', as.character(df.ftp$dates[1]))
-  cat('\n   Last Date in ftp:  ', as.character(df.ftp$dates[nrow(df.ftp)]))
+  cat('\n   First available date in ftp: ', as.character(df.ftp$dates[1]))
+  cat('\n   Last available date in ftp:  ', as.character(df.ftp$dates[nrow(df.ftp)]))
 
   # filter files to dl
   idx <- (df.ftp$dates >= first.date) & (df.ftp$dates <= last.date)
@@ -154,6 +160,9 @@ ghfd_get_HF_data <- function(my.assets,
       'ERROR: No files in ftp match the interval given by first.date and last.date (you should check your dates). Returning empty data.frame'
     )
   }
+
+  cat('\n   First date to download: ', as.character(df.ftp$dates[idx][1]))
+  cat('\n   Last date to download:  ', as.character(df.ftp$dates[idx][length(df.ftp$dates[idx])]))
 
   my.links <- paste0(my.ftp, files.to.dl)
 

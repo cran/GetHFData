@@ -16,7 +16,7 @@
 #' df.out <- ghfd_read_file(out.file, my.assets)
 #' print(head(df.out))
 ghfd_read_file <- function(out.file,
-                           my.assets,
+                           my.assets = NULL,
                            first.time = '10:00:00',
                            last.time = '17:00:00',
                            type.output = 'agg',
@@ -27,32 +27,80 @@ ghfd_read_file <- function(out.file,
   col.names <- c('SessionDate','InstrumentSymbol','TradeNumber', 'TradePrice', 'TradedQuantity','Tradetime',
                  'TradeIndicator', 'BuyOrderDate', 'SequentialBuyOrderNumber','SecondaryOrderID',
                  'AggressorBuyOrderIndicator','SellOrderDate','SequentialSellOrderNumber','SecondaryOrderID2',
-                 'AggressorSellOrde Indicator','CrossTradeIndicator', 'BuyMember','SellMember')
+                 'AggressorSellOrderIndicator','CrossTradeIndicator', 'BuyMember','SellMember')
 
 
+  my.col.types <- readr::cols(
+    SessionDate = readr::col_date(format = ""),
+    InstrumentSymbol = readr::col_character(),
+    TradeNumber = readr::col_character(),
+    TradePrice = readr::col_character(),
+    TradedQuantity = readr::col_character(),
+    Tradetime = readr::col_character(),
+    TradeIndicator = readr::col_integer(),
+    BuyOrderDate = readr::col_date(format = ""),
+    SequentialBuyOrderNumber = readr::col_character(),
+    SecondaryOrderID = readr::col_character(),
+    AggressorBuyOrderIndicator = readr::col_integer(),
+    SellOrderDate = readr::col_date(format = ""),
+    SequentialSellOrderNumber = readr::col_character(),
+    SecondaryOrderID2 = readr::col_character(),
+    AggressorSellOrderIndicator = readr::col_integer(),
+    CrossTradeIndicator = readr::col_integer(),
+    BuyMember = readr::col_character(),
+    SellMember = readr::col_character()
+  )
   # fix for "no visible binding" NOTE from CHECK
-  #utils::suppressForeignCheck(col.names)
+  #utils::suppressForeignCheck(col.names)   # DOESNT WORK
+  # Unfortunately this seems to be the easiest way to keep CHECK quiet about the variables
 
   InstrumentSymbol <- TradeIndicator <- SessionDate <- TradePrice <-  NULL
   TradedQuantity <- Tradetime <-  AggressorBuyOrderIndicator <- TradeDateTime <- NULL
-  last.price <- TradeSign <- NULL
+  last.price <- TradeSign <- BuyMember <- CrossTradeIndicator <- SellMember <- NULL
 
   # read data (warning are from last line)
   suppressWarnings(
-    my.df <- readr::read_csv2(file = out.file, skip = 1, col_names = col.names, progress = F)
+    my.df <- readr::read_csv2(file = out.file,
+                              skip = 1,
+                              col_names = col.names,
+                              progress = F,
+                              col_types = my.col.types)
   )
+
+  if(nrow(my.df)<10){
+	return(data.frame())
+  }
+
+  # remove cancelled trades
+  my.df <- dplyr::filter(my.df,
+                         TradeIndicator == 1)
+
 
   cat(paste(' - Imported ', nrow(my.df), 'lines,',length(unique(my.df$InstrumentSymbol)),'unique tickers'))
   cat(paste('\n   -> Processing file'))
 
   # filter raw data for assets and cancelled trades
+
+  # if no my.assets are suppied, import everything
+
+  if (is.null(my.assets)){
+    my.assets <- unique(my.df$InstrumentSymbol)
+  }
+
   my.df <- dplyr::filter(my.df,
-                         InstrumentSymbol %in% my.assets,
-                         TradeIndicator ==1)
+                         InstrumentSymbol %in% my.assets)
 
   # keep only columns with interesting information
   my.df <- dplyr::select(my.df,
-                         SessionDate, InstrumentSymbol,TradePrice,TradedQuantity,Tradetime,AggressorBuyOrderIndicator)
+                         SessionDate,
+                         InstrumentSymbol,
+                         TradePrice,
+                         TradedQuantity,
+                         Tradetime,
+                         AggressorBuyOrderIndicator,
+                         CrossTradeIndicator,
+                         BuyMember,
+                         SellMember)
 
   # Set objet classes correct
   my.df$TradePrice <- as.numeric(my.df$TradePrice)
@@ -61,8 +109,10 @@ ghfd_read_file <- function(out.file,
   my.df$TradeDateTime <- lubridate::ymd_hms(paste(my.df$SessionDate,my.df$Tradetime),
                                         tz = "America/Sao_Paulo")
 
+  my.df$BuyMember <- as.numeric(my.df$BuyMember)
+  my.df$SellMember <- as.numeric(my.df$SellMember)
 
-  # trading signs
+  # calculate trading signs
   my.df$TradeSign <-   (my.df$AggressorBuyOrderIndicator ==1)*1 - (my.df$AggressorBuyOrderIndicator ==2)*1
   my.df$AggressorBuyOrderIndicator <- NULL
 
@@ -117,7 +167,7 @@ ghfd_read_file <- function(out.file,
                               sum.qtd        = sum(TradedQuantity),
                               sum.vol        = sum(TradedQuantity*TradePrice),
                               n.buys         = sum(TradeSign == 1),
-                              n.sells        = sum(TradeSign == -1)  )
+                              n.sells        = sum(TradeSign == -1))
 
     t.out$Tradetime <- format(as.POSIXct(t.out$TradeDateTime), '%H:%M:%S')
 

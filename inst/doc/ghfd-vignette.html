@@ -12,7 +12,7 @@
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2016-07-21" />
+<meta name="date" content="2016-08-15" />
 
 <title>Downloading and aggregating high frequency trading data from Bovespa</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Downloading and aggregating high frequency trading data from Bovespa</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2016-07-21</em></h4>
+<h4 class="date"><em>2016-08-15</em></h4>
 
 
 
@@ -86,20 +86,29 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <p>In the next example we will only use a local file from the package. Given the size of the files in the ftp and the CHECK process of CRAN, it makes sense to keep this vignette compact and fast to run.</p>
 <div id="reading-trading-data-from-local-file-1-date" class="section level2">
 <h2>Reading trading data from local file (1 date)</h2>
-<p>Lets assume you want high frequency trading data for options in a given date (2015-11-26). This file could be downloaded from the ftp using function <code>ghfd_download_file</code>, but it is already available locally in the package.</p>
+<p>Lets assume you want high frequency trading data for options in a given date (2015-11-26). This file could be downloaded from the ftp using function <code>ghfd_download_file</code>, but it is already available locally within the package.</p>
 <p>The first step is to check the available tickers in the zip file:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GetHFData)
 
 out.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">'NEG_OPCOES_20151126.zip'</span>, <span class="dt">package =</span> <span class="st">&quot;GetHFData&quot;</span>)
-tickers.out &lt;-<span class="st"> </span><span class="kw">ghfd_get_available_tickers_from_file</span>(out.file)
-<span class="kw">print</span>(tickers.out[<span class="dv">1</span>:<span class="dv">10</span>]) <span class="co"># show only 10</span></code></pre></div>
-<pre><code>## 
-## PETRL80  PETRL9 VALEL14 VALEL43 PETRL70 PETRX80 VALEA43 ITUBA14 VALEL12 
-##    2882     985     754     679     514     507     478     415     383 
-##  ITUBL1 
-##     270</code></pre>
-<p>In <code>tickers.out</code> one can find the symbols available in the file and also the number of trades for each. Now, lets take the 3 most traded instruments in that day and check the result of the import process:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my.assets &lt;-<span class="st"> </span><span class="kw">names</span>(tickers.out[<span class="dv">1</span>:<span class="dv">3</span>]) <span class="co"># ticker to find in zip file</span>
+df.tickers &lt;-<span class="st"> </span><span class="kw">ghfd_get_available_tickers_from_file</span>(out.file)
+<span class="kw">print</span>(<span class="kw">head</span>(df.tickers)) <span class="co"># show only 10</span></code></pre></div>
+<pre><code>##   tickers n.trades
+## 1 PETRL80     2882
+## 2  PETRL9      985
+## 3 VALEL14      754
+## 4 VALEL43      679
+## 5 PETRL70      514
+## 6 PETRX80      507
+##                                                                                                        f.name
+## 1 C:/Users/00141390/AppData/Local/Temp/RtmpwF5kBD/Rinst1f3c66c3302a/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 2 C:/Users/00141390/AppData/Local/Temp/RtmpwF5kBD/Rinst1f3c66c3302a/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 3 C:/Users/00141390/AppData/Local/Temp/RtmpwF5kBD/Rinst1f3c66c3302a/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 4 C:/Users/00141390/AppData/Local/Temp/RtmpwF5kBD/Rinst1f3c66c3302a/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 5 C:/Users/00141390/AppData/Local/Temp/RtmpwF5kBD/Rinst1f3c66c3302a/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 6 C:/Users/00141390/AppData/Local/Temp/RtmpwF5kBD/Rinst1f3c66c3302a/GetHFData/extdata/NEG_OPCOES_20151126.zip</code></pre>
+<p>In <code>df.tickers</code> one can find the symbols available in the file and also the number of trades for each. Now, lets take the 3 most traded instruments in that day and check the result of the import process:</p>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my.assets &lt;-<span class="st"> </span>df.tickers$tickers[<span class="dv">1</span>:<span class="dv">3</span>] <span class="co"># ticker to find in zip file</span>
 
 start.time &lt;-<span class="st"> '10:00:00'</span> <span class="co"># defines first time period of day</span>
 last.time &lt;-<span class="st"> '17:00:00'</span>  <span class="co"># defines last time period of day</span>
@@ -110,11 +119,11 @@ my.df &lt;-<span class="st"> </span><span class="kw">ghfd_read_file</span>(out.f
                         <span class="dt">last.time =</span> <span class="st">'17:00:00'</span>,
                         <span class="dt">type.output =</span> <span class="st">'raw'</span>,
                         <span class="dt">agg.diff =</span> <span class="st">'15 min'</span>)</code></pre></div>
-<pre><code>##  - Imported  18303 lines, 771 unique tickers
+<pre><code>##  - Imported  18301 lines, 770 unique tickers
 ##    -&gt; Processing file - Found 4621 lines, 3 unique tickers</code></pre>
 <p>Let’s see the first part of the imported dataframe.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">head</span>(my.df)</code></pre></div>
-<pre><code>## # A tibble: 6 x 7
+<pre><code>## # A tibble: 6 x 10
 ##   SessionDate InstrumentSymbol TradePrice TradedQuantity    Tradetime
 ##        &lt;date&gt;            &lt;chr&gt;      &lt;dbl&gt;          &lt;dbl&gt;        &lt;chr&gt;
 ## 1  2015-11-26          PETRL80       0.43            600 10:00:17.430
@@ -123,12 +132,14 @@ my.df &lt;-<span class="st"> </span><span class="kw">ghfd_read_file</span>(out.f
 ## 4  2015-11-26          PETRL80       0.45            500 10:00:34.676
 ## 5  2015-11-26          PETRL80       0.45           5000 10:00:36.274
 ## 6  2015-11-26          PETRL80       0.45           1000 10:00:53.221
-## # ... with 2 more variables: TradeDateTime &lt;time&gt;, TradeSign &lt;dbl&gt;</code></pre>
+## # ... with 5 more variables: CrossTradeIndicator &lt;int&gt;, BuyMember &lt;dbl&gt;,
+## #   SellMember &lt;dbl&gt;, TradeDateTime &lt;time&gt;, TradeSign &lt;dbl&gt;</code></pre>
 <p>The columns names are self explanatory:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">names</span>(my.df)</code></pre></div>
-<pre><code>## [1] &quot;SessionDate&quot;      &quot;InstrumentSymbol&quot; &quot;TradePrice&quot;      
-## [4] &quot;TradedQuantity&quot;   &quot;Tradetime&quot;        &quot;TradeDateTime&quot;   
-## [7] &quot;TradeSign&quot;</code></pre>
+<pre><code>##  [1] &quot;SessionDate&quot;         &quot;InstrumentSymbol&quot;    &quot;TradePrice&quot;         
+##  [4] &quot;TradedQuantity&quot;      &quot;Tradetime&quot;           &quot;CrossTradeIndicator&quot;
+##  [7] &quot;BuyMember&quot;           &quot;SellMember&quot;          &quot;TradeDateTime&quot;      
+## [10] &quot;TradeSign&quot;</code></pre>
 <p>Now lets plot the prices of all instruments:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(ggplot2)
  
@@ -162,8 +173,7 @@ df.out &lt;-<span class="st"> </span><span class="kw">ghfd_get_HF_data</span>(<s
                            <span class="dt">first.time =</span> first.time,
                            <span class="dt">last.time =</span> last.time,
                            <span class="dt">type.output =</span> type.output,
-                           <span class="dt">agg.diff =</span> agg.diff,
-                           <span class="dt">clean.files =</span> F)</code></pre></div>
+                           <span class="dt">agg.diff =</span> agg.diff)</code></pre></div>
 </div>
 
 

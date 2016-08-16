@@ -17,7 +17,7 @@ ghfd_get_available_tickers_from_ftp(my.date = "2015-11-03",
 \item{max.dl.tries}{Maximum attempts to download the files from ftp}
 }
 \value{
-A vector with the number of trades for each ticker found in file
+A data.frame with the tickers, number of found trades and file name
 }
 \description{
 This function will read the Bovespa ftp for a given market/date and output
@@ -27,10 +27,10 @@ and the numeric values as the number of trades for each ticker
 \examples{
 
 \dontrun{
- available.tickers <- ghfd_get_available_tickers_from_ftp(my.date = '2015-11-03',
+ df.tickers <- ghfd_get_available_tickers_from_ftp(my.date = '2015-11-03',
  type.market = 'BMF')
 
- print(available.tickers)
+ print(head(df.tickers))
 }
 }
 
