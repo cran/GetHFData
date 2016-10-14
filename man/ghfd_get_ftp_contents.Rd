@@ -7,7 +7,7 @@
 ghfd_get_ftp_contents(type.market = "equity", max.dl.tries = 10)
 }
 \arguments{
-\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' )}
+\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' ).}
 
 \item{max.dl.tries}{Maximum attempts to download the files from ftp}
 }

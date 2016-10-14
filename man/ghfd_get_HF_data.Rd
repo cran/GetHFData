@@ -4,15 +4,15 @@
 \alias{ghfd_get_HF_data}
 \title{Downloads and aggregates high frequency trading data directly from the Bovespa ftp}
 \usage{
-ghfd_get_HF_data(my.assets, type.market, first.date, last.date,
+ghfd_get_HF_data(my.assets = NULL, type.market, first.date, last.date,
   first.time = "10:00:00", last.time = "17:00:00", type.output = "agg",
   agg.diff = "15 min", dl.dir = "ftp files", max.dl.tries = 10,
   clean.files = FALSE)
 }
 \arguments{
-\item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5'))}
+\item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)}
 
-\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' )}
+\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' ).}
 
 \item{first.date}{The first date of the imported data (Date class)}
 
@@ -35,7 +35,7 @@ Example: agg.diff = '15 mins', agg.diff = '1 hour'.}
 \item{clean.files}{Should the files be removed after reading it? (TRUE or FALSE)}
 }
 \value{
-A dataframe with the financial data (raw (tick by tick) or aggregated)
+A dataframe with the financial data in the raw format (tick by tick) or aggregated
 }
 \description{
 This function downloads zip files containing trades from Bovespa's ftp (ftp://ftp.bmf.com.br/MarketData/) and imports it into R.

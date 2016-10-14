@@ -3,8 +3,8 @@
 #' This function downloads zip files containing trades from Bovespa's ftp (ftp://ftp.bmf.com.br/MarketData/) and imports it into R.
 #' See the vignette and examples for more details on how to use the function.
 #'
-#' @param my.assets The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5'))
-#' @param type.market The type of market to download data from ('equity', 'options', 'BMF' )
+#' @param my.assets The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)
+#' @param type.market The type of market to download data from ('equity', 'options', 'BMF' ).
 #' @param first.date The first date of the imported data (Date class)
 #' @param last.date  The last date of the imported data (Date class)
 #' @param first.time The first intraday period to import the data. All trades before this time of day are ignored. As character, e.g. '10:00:00'.
@@ -17,7 +17,7 @@
 #' @param max.dl.tries Maximum attempts to download the files from ftp
 #' @param clean.files Should the files be removed after reading it? (TRUE or FALSE)
 #'
-#' @return A dataframe with the financial data (raw (tick by tick) or aggregated)
+#' @return A dataframe with the financial data in the raw format (tick by tick) or aggregated
 #' @export
 #'
 #' @examples
@@ -30,7 +30,7 @@
 #' \dontrun{
 #' df.out <- ghfd_get_HF_data(my.assets, type.market, first.date,  last.date)
 #' }
-ghfd_get_HF_data <- function(my.assets,
+ghfd_get_HF_data <- function(my.assets = NULL,
                              type.market,
                              first.date,
                              last.date,
@@ -112,13 +112,16 @@ ghfd_get_HF_data <- function(my.assets,
 
   if (!any(test.char)){
     stop(paste0('ERROR: Input agg.diff (',agg.diff,') should have one of the following strings: ',
-               paste(possible.char, collapse = ', ')))
+                paste(possible.char, collapse = ', ')))
   }
 
   # check my.assets
-  my.assets <- as.character(my.assets)
-  if (class(my.assets)!='character'){
-    stop('The input my.assets should have class equal to character')
+  if (!is.null(my.assets)){
+    my.assets <- as.character(my.assets)
+
+    if (class(my.assets)!='character'){
+      stop('The input my.assets should have class equal to character')
+    }
   }
 
   # create directory

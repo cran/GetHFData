@@ -10,7 +10,7 @@ ghfd_get_available_tickers_from_ftp(my.date = "2015-11-03",
 \arguments{
 \item{my.date}{A single date to check tickers in ftp (e.g. '2015-11-03')}
 
-\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' )}
+\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' ).}
 
 \item{dl.dir}{The folder to download the zip files}
 

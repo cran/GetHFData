@@ -82,6 +82,7 @@ ghfd_get_available_tickers_from_ftp <- function(my.date = '2015-11-03',
 
   df.out <- data.frame(tickers = names(out),
                        n.trades = as.numeric(out),
+                       type.market = type.market,
                        f.name = out.file)
   return(df.out)
 

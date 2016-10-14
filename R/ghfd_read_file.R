@@ -22,8 +22,16 @@ ghfd_read_file <- function(out.file,
                            type.output = 'agg',
                            agg.diff = '15 min'){
 
-  # ERROR CHECKING
+  # check my.assets
+  if (!is.null(my.assets)){
+    my.assets <- as.character(my.assets)
 
+    if (class(my.assets)!='character'){
+      stop('The input my.assets should have class equal to character')
+    }
+  }
+
+  # import data
   col.names <- c('SessionDate','InstrumentSymbol','TradeNumber', 'TradePrice', 'TradedQuantity','Tradetime',
                  'TradeIndicator', 'BuyOrderDate', 'SequentialBuyOrderNumber','SecondaryOrderID',
                  'AggressorBuyOrderIndicator','SellOrderDate','SequentialSellOrderNumber','SecondaryOrderID2',
@@ -68,7 +76,7 @@ ghfd_read_file <- function(out.file,
   )
 
   if(nrow(my.df)<10){
-	return(data.frame())
+    return(data.frame())
   }
 
   # remove cancelled trades
@@ -87,8 +95,8 @@ ghfd_read_file <- function(out.file,
     my.assets <- unique(my.df$InstrumentSymbol)
   }
 
-  my.df <- dplyr::filter(my.df,
-                         InstrumentSymbol %in% my.assets)
+  # match my.assets
+  my.df <- dplyr::filter(my.df, stringr::str_detect(InstrumentSymbol, my.assets))
 
   # keep only columns with interesting information
   my.df <- dplyr::select(my.df,
@@ -107,7 +115,7 @@ ghfd_read_file <- function(out.file,
   my.df$TradedQuantity <- as.numeric(my.df$TradedQuantity)
   my.df$SessionDate <- as.Date(my.df$SessionDate)
   my.df$TradeDateTime <- lubridate::ymd_hms(paste(my.df$SessionDate,my.df$Tradetime),
-                                        tz = "America/Sao_Paulo")
+                                            tz = "America/Sao_Paulo")
 
   my.df$BuyMember <- as.numeric(my.df$BuyMember)
   my.df$SellMember <- as.numeric(my.df$SellMember)
@@ -116,8 +124,8 @@ ghfd_read_file <- function(out.file,
   my.df$TradeSign <-   (my.df$AggressorBuyOrderIndicator ==1)*1 - (my.df$AggressorBuyOrderIndicator ==2)*1
   my.df$AggressorBuyOrderIndicator <- NULL
 
-  cat(paste0(' - Found ', nrow(my.df), ' lines, ',
-             length(unique(my.df$InstrumentSymbol)),' unique tickers'))
+  cat(paste0(' - Found ', nrow(my.df), ' lines for ',
+             length(unique(my.df$InstrumentSymbol)),' selected tickers'))
 
 
   # remove day times outside period from first.time and last.time
@@ -175,6 +183,8 @@ ghfd_read_file <- function(out.file,
 
     # remove NA (trades outside of time interval)
     t.out <- stats::na.omit(t.out)
+
+    cat(paste('\n   -> Aggregation resulted in dataframe with',nrow(t.out), 'rows'))
 
     return(t.out)
   }

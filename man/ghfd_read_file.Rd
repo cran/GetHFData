@@ -10,7 +10,7 @@ ghfd_read_file(out.file, my.assets = NULL, first.time = "10:00:00",
 \arguments{
 \item{out.file}{Name of zip file}
 
-\item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5'))}
+\item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)}
 
 \item{first.time}{The first intraday period to import the data. All trades before this time of day are ignored. As character, e.g. '10:00:00'.}
 
