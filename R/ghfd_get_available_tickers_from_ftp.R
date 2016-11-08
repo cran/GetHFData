@@ -37,8 +37,23 @@ ghfd_get_available_tickers_from_ftp <- function(my.date = '2015-11-03',
     dir.create(dl.dir)
   }
 
+  # check type.market
+  # check type.market
+  possible.names <- c('equity','equity-odds','options','BMF')
+
+  idx <- type.market %in% possible.names
+
+  if (!any(idx)){
+    stop(paste(c('Input type.market not valid. It should be one of the following: ', possible.names), collapse = ', '))
+  }
+
+  # test for internet
+  test.internet <- curl::has_internet()
+
   # set ftp site
   if (type.market == 'equity')
+    my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
+  if (type.market == 'equity-odds')
     my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
   if (type.market == 'options')
     my.ftp <- "ftp://ftp.bmf.com.br/MarketData/Bovespa-Opcoes/"

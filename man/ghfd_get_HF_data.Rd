@@ -12,7 +12,7 @@ ghfd_get_HF_data(my.assets = NULL, type.market, first.date, last.date,
 \arguments{
 \item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)}
 
-\item{type.market}{The type of market to download data from ('equity', 'options', 'BMF' ).}
+\item{type.market}{The type of market to download data from ('equity', 'equity-odds','options', 'BMF' ).}
 
 \item{first.date}{The first date of the imported data (Date class)}
 

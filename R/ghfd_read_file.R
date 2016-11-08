@@ -96,7 +96,7 @@ ghfd_read_file <- function(out.file,
   }
 
   # match my.assets
-  my.df <- dplyr::filter(my.df, stringr::str_detect(InstrumentSymbol, my.assets))
+  my.df <- dplyr::filter(my.df, InstrumentSymbol %in% my.assets)
 
   # keep only columns with interesting information
   my.df <- dplyr::select(my.df,

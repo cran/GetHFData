@@ -17,7 +17,7 @@ ghfd_get_ftp_contents <- function(type.market = 'equity',
                                   max.dl.tries = 10){
 
   # check type.market
-  possible.names <- c('equity','options','BMF')
+  possible.names <- c('equity','equity-odds','options','BMF')
 
   idx <- type.market %in% possible.names
 
@@ -33,7 +33,8 @@ ghfd_get_ftp_contents <- function(type.market = 'equity',
   }
 
   # set ftp site
-  if (type.market == 'equity')  my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
+  if (type.market == 'equity')      my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
+  if (type.market == 'equity-odds') my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
   if (type.market == 'options') my.ftp <- "ftp://ftp.bmf.com.br/MarketData/Bovespa-Opcoes/"
   if (type.market == 'BMF')     my.ftp <- "ftp://ftp.bmf.com.br/marketdata/BMF/"
 
@@ -54,13 +55,19 @@ ghfd_get_ftp_contents <- function(type.market = 'equity',
 
     files.at.ftp <- stringr::str_extract_all(files.at.ftp,pattern = 'NEG_(.*?).zip')[[1]]
 
-    # remove FRAC market files
+    # remove or not FRAC market files
     idx <- stringr::str_detect(files.at.ftp, pattern = stringr::fixed('FRAC'))
-    files.at.ftp <- files.at.ftp[!idx]
+
+    if (type.market=='equity-odds'){
+      files.at.ftp <- files.at.ftp[idx]
+    } else {
+
+      files.at.ftp <- files.at.ftp[!idx]
+    }
 
     # remove BMF files in Bovespa equity (why are these files there??)
 
-    if (type.market =='equity'){
+    if ((type.market =='equity')|(type.market=='equity-odds')){
       idx <- stringr::str_detect(files.at.ftp, pattern = stringr::fixed('BMF'))
       files.at.ftp <- files.at.ftp[!idx]
 

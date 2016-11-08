@@ -1,3 +1,11 @@
+### Version 1.2.1 (2016-11-07)
+
+Minor update with the following changes:
+
+* The user can now download data from the odd lots equity market (type.market='equity-odds')
+* Added Henrique Ramos as a contributor
+* Other minor changes
+
 ### Version 1.2.0 (2016-10-14)
 
 Minor update with the following changes:

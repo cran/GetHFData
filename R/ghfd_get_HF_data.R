@@ -4,7 +4,7 @@
 #' See the vignette and examples for more details on how to use the function.
 #'
 #' @param my.assets The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)
-#' @param type.market The type of market to download data from ('equity', 'options', 'BMF' ).
+#' @param type.market The type of market to download data from ('equity', 'equity-odds','options', 'BMF' ).
 #' @param first.date The first date of the imported data (Date class)
 #' @param last.date  The last date of the imported data (Date class)
 #' @param first.time The first intraday period to import the data. All trades before this time of day are ignored. As character, e.g. '10:00:00'.
@@ -73,7 +73,7 @@ ghfd_get_HF_data <- function(my.assets = NULL,
     ))
   }
   # check type.market
-  possible.names <- c('equity', 'options', 'BMF')
+  possible.names <- c('equity', 'equity-odds','options', 'BMF')
 
   idx <- type.market %in% possible.names
 
@@ -133,6 +133,8 @@ ghfd_get_HF_data <- function(my.assets = NULL,
 
   # set ftp site
   if (type.market == 'equity')
+    my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
+  if (type.market == 'equity-odds')
     my.ftp <- "ftp://ftp.bmf.com.br/marketdata/Bovespa-Vista/"
   if (type.market == 'options')
     my.ftp <- "ftp://ftp.bmf.com.br/MarketData/Bovespa-Opcoes/"
