@@ -9,7 +9,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-Recently Bovespa, the Brazilian financial exchange company, has released the access to its internal [ftp site](ftp://ftp.bmf.com.br/). In this address one can find several information regarding the Brazilian financial system, including datasets with high frequency (tick by tick) trading data for three different markets: equity, options and BMF. 
+Recently, Bovespa, the Brazilian financial exchange company, allowed external access to its [ftp site](ftp://ftp.bmf.com.br/). In this address one can find several information regarding the Brazilian financial system, including datasets with high frequency (tick by tick) trading data for three different markets: equity, options and BMF.
 
 Downloading and processing these files, however, can be exausting. The dataset is composed of zip files with the whole trading data, separated by day and market. These files are huge in size and processing or aggregating them in a usefull manner requires specific knowledge for the structure of the dataset. 
 
@@ -20,11 +20,12 @@ The package GetHFData make is easy to access this dataset directly by allowing t
 * Download individual files using `ghfd_download_file` 
 * Download and process a batch of dates and assets codes with `ghfd_get_HF_data` 
 
-In the next example we will only use a local file from the package. Given the size of the files in the ftp and the CHECK process of CRAN, it makes sense to keep this vignette compact and fast to run. 
+In the next example we will only use a local file from the package. Given the size of the files in the ftp and the CHECK process of CRAN, it makes sense to keep this vignette compact and fast to run. More details about the usage of the package can be found in my [SSRN paper](https://ssrn.com/abstract=2824058). 
+
 
 ## Reading trading data from local file (1 date)
 
-Lets assume you want high frequency trading data for options in a given date  (2015-11-26). This file could be downloaded from the ftp using function `ghfd_download_file`, but it is already available locally within the package.
+Let's assume you need to analize high frequency trading data for option contracts in a given date  (2015-11-26). This file could be downloaded from the ftp using function `ghfd_download_file`, but it is already available locally within the package.
 
 The first step is to check the available tickers in the zip file:
 
@@ -80,7 +81,7 @@ As we can see, this was a fairly stable day for the price of these option contra
 
 ## Downloading and reading trading data for several dates
 
-In the last example we only used one date. The package GetHDData also allows for a batch download and processing of files using starting and ending dates. In this vignette we are not running the code given the large size of the downloaded files. You should try the next example in your own computer (just copy, paste and run the code in R).
+In the last example we only used one date. The package GetHDData also supports batch downloads and processing of several different tickers using start and end dates. In this vignette we are not running the code given the large size of the downloaded files. You should try the next example in your own computer (just copy, paste and run the code in R).
 
 In this example we will download files from the ftp for _PETR4_, an equity contract traded in Bovespa. The data will be processed, resulting in financial data aggregated by 15 minutes.
 

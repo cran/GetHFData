@@ -1,6 +1,6 @@
 .onAttach <- function(libname, pkgname) {
 
-  citation.apa <- 'Perlin, M. (2016). GetHFData: A R Package for Downloading and Aggregating High Frequency Trading Data from Bovespa. Available at SSRN.'
+  citation.apa <- 'Perlin, M., Ramos, H. (2016). GetHFData: A R Package for Downloading and Aggregating High Frequency Trading Data from Bovespa. Available at SSRN.'
   citation.bibtex <- '@article{perlin2016gethfdata,
   title={GetHFData: A R Package for Downloading and Aggregating High Frequency Trading Data from Bovespa},
   author={Perlin, Marcelo and Henrique, Ramos},

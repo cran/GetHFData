@@ -1,3 +1,10 @@
+### Version 1.2.2 (2016-12-05)
+
+Minor update:
+
+* Revised apa citation on attach
+* Fixed some typos in vignette and added link to SSRN paper
+
 ### Version 1.2.1 (2016-11-07)
 
 Minor update with the following changes:
