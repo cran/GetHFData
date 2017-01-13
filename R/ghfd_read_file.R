@@ -98,6 +98,12 @@ ghfd_read_file <- function(out.file,
   # match my.assets
   my.df <- dplyr::filter(my.df, InstrumentSymbol %in% my.assets)
 
+  # if no data is returned, output empty dataframe
+  if (nrow(my.df)==0){
+    cat(' - Found no data for my.assets.')
+    return(data.frame())
+  }
+
   # keep only columns with interesting information
   my.df <- dplyr::select(my.df,
                          SessionDate,
@@ -131,6 +137,8 @@ ghfd_read_file <- function(out.file,
   # remove day times outside period from first.time and last.time
 
   unique.dates <- unique(my.df$SessionDate)
+
+
 
   first.time <-
     as.POSIXct(paste0(unique.dates[1], ' ', first.time, ' BRT'))

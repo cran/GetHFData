@@ -5,8 +5,8 @@
 #'
 #' @param my.assets The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)
 #' @param type.market The type of market to download data from ('equity', 'equity-odds','options', 'BMF' ).
-#' @param first.date The first date of the imported data (Date class)
-#' @param last.date  The last date of the imported data (Date class)
+#' @param first.date The first date of the imported data (e.g. '2016-01-01')
+#' @param last.date  The last date of the imported data (e.g. '2016-01-05')
 #' @param first.time The first intraday period to import the data. All trades before this time of day are ignored. As character, e.g. '10:00:00'.
 #' @param last.time The last intraday period to import the data. All trades after this time of day are ignored. As character, e.g. '18:00:00'.
 #' @param type.output Defines the type of output of the data. The choice 'agg' outputs aggregated data for time intervals defined in agg.diff.
@@ -32,8 +32,8 @@
 #' }
 ghfd_get_HF_data <- function(my.assets = NULL,
                              type.market,
-                             first.date,
-                             last.date,
+                             first.date = '2016-01-01',
+                             last.date = '2016-01-05',
                              first.time = '10:00:00',
                              last.time = '17:00:00',
                              type.output = 'agg',
@@ -49,13 +49,23 @@ ghfd_get_HF_data <- function(my.assets = NULL,
     stop('No internet connection found...')
   }
 
+
   # check date class
+  first.date <- as.Date(first.date)
   if (class(first.date) != 'Date') {
-    stop('ERROR: Input first.date should be of class Date')
+    stop(paste('ERROR: Input first.date can either be a Date object or',
+               'a string with the standard date format (YYYY-MM-DD)'))
   }
 
+  last.date <- as.Date(last.date)
   if (class(last.date) != 'Date') {
-    stop('ERROR: Input first.date should be of class Date')
+    stop(paste('ERROR: Input last.date can either be a Date object or',
+               'a string with the standard date format (YYYY-MM-DD)'))
+  }
+
+  if (last.date<first.date){
+    stop(paste('It seems that last.date is lower than first.date. That would not work as ',
+               'time only moves forward (as far as I know..). Please check it.'))
   }
 
   # check type.output
@@ -90,7 +100,7 @@ ghfd_get_HF_data <- function(my.assets = NULL,
   # check clean.files
 
   if (!is.logical(clean.files )){
-    stop('ERROR: Input clean.files should be a logical')
+    stop('ERROR: Input clean.files should be a logical (TRUE/FALSE)')
   }
 
   # check first/last time input
@@ -120,7 +130,7 @@ ghfd_get_HF_data <- function(my.assets = NULL,
     my.assets <- as.character(my.assets)
 
     if (class(my.assets)!='character'){
-      stop('The input my.assets should have class equal to character')
+      stop('The input my.assets should be a character object')
     }
   }
 
@@ -143,9 +153,11 @@ ghfd_get_HF_data <- function(my.assets = NULL,
 
   # first msgs
 
-  cat('\nRunning ghfd_get_HF_Data() for:')
+  cat('\nRunning ghfd_get_HF_Data for:')
   cat('\n   type.market =', type.market)
-  cat('\n   my.assets =', paste0(my.assets, collapse = ', '))
+  cat('\n   my.assets =', paste0(dplyr::if_else(is.null(my.assets),
+                                                'All tickers',
+                                                my.assets), collapse = ', '))
   cat('\n   type.output =', type.output)
   if (type.output=='agg') cat('\n      agg.diff =', agg.diff)
 

@@ -39,8 +39,8 @@ print(p)
 #  first.time <- '11:00:00'
 #  last.time <- '17:00:00'
 #  
-#  first.date <- as.Date('2015-11-01')
-#  last.date <- as.Date('2015-11-10')
+#  first.date <- '2015-11-01'
+#  last.date <- '2015-11-10'
 #  type.output <- 'agg'
 #  agg.diff <- '15 min'
 #  

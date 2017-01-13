@@ -4,19 +4,19 @@
 \alias{ghfd_get_HF_data}
 \title{Downloads and aggregates high frequency trading data directly from the Bovespa ftp}
 \usage{
-ghfd_get_HF_data(my.assets = NULL, type.market, first.date, last.date,
-  first.time = "10:00:00", last.time = "17:00:00", type.output = "agg",
-  agg.diff = "15 min", dl.dir = "ftp files", max.dl.tries = 10,
-  clean.files = FALSE)
+ghfd_get_HF_data(my.assets = NULL, type.market, first.date = "2016-01-01",
+  last.date = "2016-01-05", first.time = "10:00:00",
+  last.time = "17:00:00", type.output = "agg", agg.diff = "15 min",
+  dl.dir = "ftp files", max.dl.tries = 10, clean.files = FALSE)
 }
 \arguments{
 \item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)}
 
 \item{type.market}{The type of market to download data from ('equity', 'equity-odds','options', 'BMF' ).}
 
-\item{first.date}{The first date of the imported data (Date class)}
+\item{first.date}{The first date of the imported data (e.g. '2016-01-01')}
 
-\item{last.date}{The last date of the imported data (Date class)}
+\item{last.date}{The last date of the imported data (e.g. '2016-01-05')}
 
 \item{first.time}{The first intraday period to import the data. All trades before this time of day are ignored. As character, e.g. '10:00:00'.}
 

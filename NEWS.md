@@ -1,3 +1,10 @@
+### Version 1.2.3 (2017-01-13)
+
+Minor update:
+
+* Fixed bug for non existing assets in first date of download process
+* Changed input Date for simpler format (e.g. '2016-01-01' and not as.Date('2016-01-01'))
+
 ### Version 1.2.2 (2016-12-05)
 
 Minor update:

@@ -24,13 +24,13 @@ ghfd_get_available_tickers_from_ftp <- function(my.date = '2015-11-03',
                                                 max.dl.tries = 10){
 
   if (length(my.date)!=1){
-    stop('ERROR: input my.date should have length 1')
+    stop('ERROR: input my.date should have length = 1')
   }
 
   # check date class
   my.date <- as.Date(my.date)
   if (class(my.date) != 'Date') {
-    stop('ERROR: Input first.date should be of class Date')
+    stop('ERROR: Input my.date can either be a Date object or a string with the standard data format (YYYY-MM-DD)')
   }
 
   if (!dir.exists(dl.dir)) {

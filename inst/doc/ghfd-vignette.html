@@ -12,7 +12,7 @@
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2016-12-05" />
+<meta name="date" content="2017-01-13" />
 
 <title>Downloading and aggregating high frequency trading data from Bovespa</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Downloading and aggregating high frequency trading data from Bovespa</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2016-12-05</em></h4>
+<h4 class="date"><em>2017-01-13</em></h4>
 
 
 
@@ -115,13 +115,13 @@ df.tickers &lt;-<span class="st"> </span><span class="kw">ghfd_get_available_tic
 ## 4 VALEL43      679
 ## 5 PETRL70      514
 ## 6 PETRX80      507
-##                                                                                                    f.name
-## 1 C:/Users/marce/AppData/Local/Temp/RtmpWYnifn/Rinst7f0257a6d1a/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 2 C:/Users/marce/AppData/Local/Temp/RtmpWYnifn/Rinst7f0257a6d1a/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 3 C:/Users/marce/AppData/Local/Temp/RtmpWYnifn/Rinst7f0257a6d1a/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 4 C:/Users/marce/AppData/Local/Temp/RtmpWYnifn/Rinst7f0257a6d1a/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 5 C:/Users/marce/AppData/Local/Temp/RtmpWYnifn/Rinst7f0257a6d1a/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 6 C:/Users/marce/AppData/Local/Temp/RtmpWYnifn/Rinst7f0257a6d1a/GetHFData/extdata/NEG_OPCOES_20151126.zip</code></pre>
+##                                                                                                   f.name
+## 1 C:/Users/marce/AppData/Local/Temp/Rtmpg909Qg/Rinstf1425c1bed/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 2 C:/Users/marce/AppData/Local/Temp/Rtmpg909Qg/Rinstf1425c1bed/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 3 C:/Users/marce/AppData/Local/Temp/Rtmpg909Qg/Rinstf1425c1bed/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 4 C:/Users/marce/AppData/Local/Temp/Rtmpg909Qg/Rinstf1425c1bed/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 5 C:/Users/marce/AppData/Local/Temp/Rtmpg909Qg/Rinstf1425c1bed/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 6 C:/Users/marce/AppData/Local/Temp/Rtmpg909Qg/Rinstf1425c1bed/GetHFData/extdata/NEG_OPCOES_20151126.zip</code></pre>
 <p>In <code>df.tickers</code> one can find the symbols available in the file and also the number of trades for each. Now, lets take the 3 most traded instruments in that day and check the result of the import process:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my.assets &lt;-<span class="st"> </span>df.tickers$tickers[<span class="dv">1</span>:<span class="dv">3</span>] <span class="co"># ticker to find in zip file</span>
 
@@ -173,8 +173,8 @@ p &lt;-<span class="st">  </span>p +<span class="st"> </span><span class="kw">ge
 first.time &lt;-<span class="st"> '11:00:00'</span>
 last.time &lt;-<span class="st"> '17:00:00'</span>
 
-first.date &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">'2015-11-01'</span>)
-last.date &lt;-<span class="st"> </span><span class="kw">as.Date</span>(<span class="st">'2015-11-10'</span>)
+first.date &lt;-<span class="st"> '2015-11-01'</span>
+last.date &lt;-<span class="st"> '2015-11-10'</span>
 type.output &lt;-<span class="st"> 'agg'</span>
 agg.diff &lt;-<span class="st"> '15 min'</span>
 
