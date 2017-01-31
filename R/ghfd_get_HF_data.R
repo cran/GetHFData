@@ -152,12 +152,17 @@ ghfd_get_HF_data <- function(my.assets = NULL,
     my.ftp <- "ftp://ftp.bmf.com.br/marketdata/BMF/"
 
   # first msgs
-
+  
+  if (is.null(my.assets)){
+    my.assets.str <- 'All tickers'
+  } else {
+    my.assets.str <- my.assets
+  }
+  
+  #browser()
   cat('\nRunning ghfd_get_HF_Data for:')
   cat('\n   type.market =', type.market)
-  cat('\n   my.assets =', paste0(dplyr::if_else(is.null(my.assets),
-                                                'All tickers',
-                                                my.assets), collapse = ', '))
+  cat('\n   my.assets =', paste0(my.assets.str, collapse = ', '))
   cat('\n   type.output =', type.output)
   if (type.output=='agg') cat('\n      agg.diff =', agg.diff)
 

@@ -1,3 +1,9 @@
+### Version 1.2.4 (2017-01-30)
+
+Minor update:
+
+* Fixed bug in msg output when length(my.assets) > 2
+
 ### Version 1.2.3 (2017-01-13)
 
 Minor update:
