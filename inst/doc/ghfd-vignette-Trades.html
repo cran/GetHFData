@@ -14,7 +14,7 @@
 
 <meta name="date" content="2017-06-01" />
 
-<title>Downloading and aggregating high frequency trading data from Bovespa</title>
+<title>Downloading and aggregating trade data from Bovespa</title>
 
 
 
@@ -68,7 +68,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Downloading and aggregating high frequency trading data from Bovespa</h1>
+<h1 class="title toc-ignore">Downloading and aggregating trade data from Bovespa</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
 <h4 class="date"><em>2017-06-01</em></h4>
 
@@ -83,14 +83,32 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 <li>Download individual files using <code>ghfd_download_file</code></li>
 <li>Download and process a batch of dates and assets codes with <code>ghfd_get_HF_data</code></li>
 </ul>
-<p>In the next example we will only use a local file from the package. Given the size of the files in the ftp and the CHECK process of CRAN, it makes sense to keep this vignette compact and fast to run. More details about the usage of the package can be found in my <a href="https://ssrn.com/abstract=2824058">SSRN paper</a>.</p>
+<p>In the next example we will only use a local file from the package. Given the size of the files in the ftp and the CHECK process of CRAN, it makes sense to keep this vignette compact and fast to run. More details about the usage of the package can be found in my <a href="http://bibliotecadigital.fgv.br/ojs/index.php/rbfin/article/view/64587/65702">RBFIN paper</a>.</p>
 <div id="reading-trading-data-from-local-file-1-date" class="section level2">
 <h2>Reading trading data from local file (1 date)</h2>
 <p>Let’s assume you need to analize high frequency trading data for option contracts in a given date (2015-11-26). This file could be downloaded from the ftp using function <code>ghfd_download_file</code>, but it is already available locally within the package.</p>
 <p>The first step is to check the available tickers in the zip file:</p>
-<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GetHFData)
-
-out.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">'NEG_OPCOES_20151126.zip'</span>, <span class="dt">package =</span> <span class="st">&quot;GetHFData&quot;</span>)
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GetHFData)</code></pre></div>
+<pre><code>## Thank you for using GetHFData! More details about the package can be found in:
+## 
+##  http://bibliotecadigital.fgv.br/ojs/index.php/rbfin/article/view/64587/65702 
+## 
+##  If applicable, please use the following citations in your research report. Thanks! 
+## 
+## APA:
+##  Perlin, M., Ramos, H. (2016). GetHFData: A R Package for Downloading and Aggregating High Frequency Trading Data from Bovespa. Brazilian Review of Finance, V. 14, N. 3. 
+## 
+## bibtex:
+##  @article{perlin2016gethfdata,
+##   title={GetHFData: A R Package for Downloading and Aggregating High Frequency Trading Data from Bovespa},
+##   author={Perlin, Marcelo and Henrique, Ramos},
+##   journal={Brazilian Review of Finance},
+##   volume={14},
+##   number={3},
+##   year={2016},
+##   publisher={Brazilian Society of Finance}
+## }</code></pre>
+<div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">out.file &lt;-<span class="st"> </span><span class="kw">system.file</span>(<span class="st">&quot;extdata&quot;</span>, <span class="st">'NEG_OPCOES_20151126.zip'</span>, <span class="dt">package =</span> <span class="st">&quot;GetHFData&quot;</span>)
 df.tickers &lt;-<span class="st"> </span><span class="kw">ghfd_get_available_tickers_from_file</span>(out.file)
 <span class="kw">print</span>(<span class="kw">head</span>(df.tickers)) <span class="co"># show only 10</span></code></pre></div>
 <pre><code>##   tickers n.obs
@@ -110,10 +128,12 @@ df.tickers &lt;-<span class="st"> </span><span class="kw">ghfd_get_available_tic
 <p>In <code>df.tickers</code> one can find the symbols available in the file and also the number of trades for each. Now, lets take the 3 most traded instruments in that day and check the result of the import process:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my.assets &lt;-<span class="st"> </span>df.tickers$tickers[<span class="dv">1</span>:<span class="dv">3</span>] <span class="co"># ticker to find in zip file</span>
 
+type.matching &lt;-<span class="st"> 'exact'</span> <span class="co"># defines how to match assets in dataset</span>
 start.time &lt;-<span class="st"> '10:00:00'</span> <span class="co"># defines first time period of day</span>
 last.time &lt;-<span class="st"> '17:00:00'</span>  <span class="co"># defines last time period of day</span>
 
-my.df &lt;-<span class="st"> </span><span class="kw">ghfd_read_file</span>(out.file,
+my.df &lt;-<span class="st"> </span><span class="kw">ghfd_read_file</span>(out.file, 
+                        <span class="dt">type.matching =</span> type.matching,
                         <span class="dt">my.assets =</span> my.assets,
                         <span class="dt">first.time =</span> <span class="st">'10:00:00'</span>,
                         <span class="dt">last.time =</span> <span class="st">'17:00:00'</span>,
@@ -153,7 +173,7 @@ p &lt;-<span class="st">  </span>p +<span class="st"> </span><span class="kw">ge
 <div id="downloading-and-reading-trading-data-for-several-dates" class="section level2">
 <h2>Downloading and reading trading data for several dates</h2>
 <p>In the last example we only used one date. The package GetHDData also supports batch downloads and processing of several different tickers using start and end dates. In this vignette we are not running the code given the large size of the downloaded files. You should try the next example in your own computer (just copy, paste and run the code in R).</p>
-<p>In this example we will download files from the ftp for <em>PETR4</em>, an equity contract traded in Bovespa. The data will be processed, resulting in financial data aggregated by 15 minutes.</p>
+<p>In this example we will download files from the ftp for all stocks related to Petrobras (PETR) and Vale do Rio Doce (VALE). The data will be processed, resulting in a dataframe with aggregated data.</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GetHFData)
 
 first.time &lt;-<span class="st"> '11:00:00'</span>
@@ -162,13 +182,18 @@ last.time &lt;-<span class="st"> '17:00:00'</span>
 first.date &lt;-<span class="st"> '2015-11-01'</span>
 last.date &lt;-<span class="st"> '2015-11-10'</span>
 type.output &lt;-<span class="st"> 'agg'</span>
+type.data &lt;-<span class="st"> 'trades'</span>
 agg.diff &lt;-<span class="st"> '15 min'</span>
 
-my.assets &lt;-<span class="st"> 'PETR4'</span>
-type.market =<span class="st"> 'equity'</span>
+<span class="co"># partial matching is available</span>
+my.assets &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">'PETR'</span>,<span class="st">'VALE'</span>)
+type.matching &lt;-<span class="st"> 'partial'</span>
+type.market  &lt;-<span class="st"> 'equity'</span>
 
 df.out &lt;-<span class="st"> </span><span class="kw">ghfd_get_HF_data</span>(<span class="dt">my.assets =</span>my.assets,
+                           <span class="dt">type.matching =</span> type.matching,
                            <span class="dt">type.market =</span> type.market,
+                           <span class="dt">type.data =</span> type.data,
                            <span class="dt">first.date =</span> first.date,
                            <span class="dt">last.date =</span> last.date,
                            <span class="dt">first.time =</span> first.time,
