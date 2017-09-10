@@ -17,8 +17,8 @@
 #'        Example: agg.diff = '15 mins', agg.diff = '1 hour'.
 #' @param dl.dir The folder to download the zip files (default = 'ftp files')
 #' @param max.dl.tries Maximum attempts to download the files from ftp
-#' @param clean.files Should the files be removed after reading it? (TRUE or FALSE)
-#' @param only.dl Should the function only download the files? (TRUE or FALSE). This is usefull if you just want the file for later analysis
+#' @param clean.files Logical. Should the files be removed after reading it? (TRUE or FALSE)
+#' @param only.dl Logical. Should the function only download the files? (TRUE or FALSE). This is usefull if you just want the file for later analysis
 #'
 #' @return A dataframe with the financial data in the raw format (tick by tick) or aggregated
 #' @export
@@ -39,8 +39,8 @@ ghfd_get_HF_data <- function(my.assets = NULL,
                              type.data = 'trades',
                              first.date = '2016-01-01',
                              last.date = '2016-01-05',
-                             first.time = '10:00:00',
-                             last.time = '17:00:00',
+                             first.time = NULL,
+                             last.time = NULL,
                              type.output = 'agg',
                              agg.diff = '15 min',
                              dl.dir = 'ftp files',
@@ -128,14 +128,18 @@ ghfd_get_HF_data <- function(my.assets = NULL,
 
   # check first/last time input
 
-  test.date <- as.POSIXct(paste0('2016-01-01', first.time, ' BRT'), format = '%Y-%m-%d %H:%M:%S')
-  if (is.na(test.date)){
-    stop(paste0('ERROR: Cant convert objet start.time (',first.time,') to a POSIXct time class.' ))
+  if (!is.null(first.time)){
+    test.date <- as.POSIXct(paste0('2016-01-01', first.time, ' BRT'), format = '%Y-%m-%d %H:%M:%S')
+    if (is.na(test.date)){
+      stop(paste0('ERROR: Cant convert objet start.time (',first.time,') to a POSIXct time class.' ))
+    }
   }
 
-  test.date <- as.POSIXct(paste0('2016-01-01', last.time, ' BRT'), format = '%Y-%m-%d %H:%M:%S')
-  if (is.na(test.date)){
-    stop(paste0('ERROR: Cant convert objet last.time (', last.time ,') to a POSIXct time class.' ))
+  if (!is.null(last.time)){
+    test.date <- as.POSIXct(paste0('2016-01-01', last.time, ' BRT'), format = '%Y-%m-%d %H:%M:%S')
+    if (is.na(test.date)){
+      stop(paste0('ERROR: Cant convert objet last.time (', last.time ,') to a POSIXct time class.' ))
+    }
   }
 
   # check agg.diff input
@@ -186,7 +190,7 @@ ghfd_get_HF_data <- function(my.assets = NULL,
   cat('\nRunning ghfd_get_HF_Data for:')
   cat('\n   type.market =', type.market)
   cat('\n   type.data =', type.data)
-  cat('\n   my.assets =', paste0(my.assets.str, collapse = ', '))
+  cat('\n   my.assets =', paste0(my.assets.str, collapse = '\t'))
   cat('\n   type.output =', type.output)
   if (type.output=='agg') cat('\n      agg.diff =', agg.diff)
 
@@ -260,7 +264,7 @@ ghfd_get_HF_data <- function(my.assets = NULL,
   }
 
 
-  if (nrow(df.out) == 0) {
+  if ( (nrow(df.out) == 0)&(only.dl = FALSE) ) {
     stop(
       paste(
         'Warning: No data found in files for assets',
@@ -271,7 +275,7 @@ ghfd_get_HF_data <- function(my.assets = NULL,
   }
 
   # sort data.frame (if raw data)
-  if ( (type.data =='orders')&(type.output == 'raw') ) {
+  if ( (type.data =='orders')&(type.output == 'raw')&(only.dl = FALSE) ) {
     idx <- order(df.out$InstrumentSymbol, df.out$OrderDatetime)
     df.out <- df.out[idx, ]
 

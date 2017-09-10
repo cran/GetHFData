@@ -6,10 +6,9 @@
 \usage{
 ghfd_get_HF_data(my.assets = NULL, type.matching = "exact",
   type.market = "equity", type.data = "trades", first.date = "2016-01-01",
-  last.date = "2016-01-05", first.time = "10:00:00",
-  last.time = "17:00:00", type.output = "agg", agg.diff = "15 min",
-  dl.dir = "ftp files", max.dl.tries = 10, clean.files = FALSE,
-  only.dl = FALSE)
+  last.date = "2016-01-05", first.time = NULL, last.time = NULL,
+  type.output = "agg", agg.diff = "15 min", dl.dir = "ftp files",
+  max.dl.tries = 10, clean.files = FALSE, only.dl = FALSE)
 }
 \arguments{
 \item{my.assets}{The tickers (symbols) of the derised assets to import data (e.g. c('PETR4', 'VALE5')). The function allow for partial patching (e.g. 'PETR' for all assets related to Petrobras). Default is set to NULL (download all available tickers)}
@@ -38,9 +37,9 @@ Example: agg.diff = '15 mins', agg.diff = '1 hour'.}
 
 \item{max.dl.tries}{Maximum attempts to download the files from ftp}
 
-\item{clean.files}{Should the files be removed after reading it? (TRUE or FALSE)}
+\item{clean.files}{Logical. Should the files be removed after reading it? (TRUE or FALSE)}
 
-\item{only.dl}{Should the function only download the files? (TRUE or FALSE). This is usefull if you just want the file for later analysis}
+\item{only.dl}{Logical. Should the function only download the files? (TRUE or FALSE). This is usefull if you just want the file for later analysis}
 }
 \value{
 A dataframe with the financial data in the raw format (tick by tick) or aggregated

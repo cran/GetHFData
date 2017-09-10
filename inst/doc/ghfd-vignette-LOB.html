@@ -14,7 +14,7 @@
 
 <meta name="date" content="2017-09-10" />
 
-<title>Downloading and aggregating order data from Bovespa</title>
+<title>Recreating the LOB (limit order book)</title>
 
 
 
@@ -68,15 +68,15 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 
 
-<h1 class="title toc-ignore">Downloading and aggregating order data from Bovespa</h1>
+<h1 class="title toc-ignore">Recreating the LOB (limit order book)</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
 <h4 class="date"><em>2017-09-10</em></h4>
 
 
 
-<p>Version 1.3 of <code>GetHFData</code> makes it possible to download and aggregate order data from Bovespa. The data comprises buy and sell orders sent by market operators. Tabular data includes type of orders (buy or sell, new/update/cancel/..), date/time of submission, priority time, prices, order quantity, among many other information.</p>
-<p><strong>Be aware that these are very large files.</strong> One day of buy and sell orders in the equity market is around 100 MB zipped and close to 1 GB unzipped. If you computer is not suited to store this data in its memory, <strong>it will crash</strong>.</p>
-<p>Here’s an example of usage that will download and aggregate order data for all option contracts related to Petrobras (PETR):</p>
+<p>Version 1.4 of <code>GetHFData</code> adds functions for recreating the LOB (limit order book) from the order data. The LOB is recreated by sorting all trading orders (buy and sell) and matching them whenever there is a match of prices.</p>
+<p>Simulating the LOB is a recursive and computer intensive problem. The current code is not optimized for speed and it may take a long time to process even a small set of financial orders.</p>
+<p>Here’s an example of usage:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(GetHFData)
 
 first.time &lt;-<span class="st"> '10:00:00'</span>
@@ -85,12 +85,11 @@ last.time &lt;-<span class="st"> '17:00:00'</span>
 first.date &lt;-<span class="st"> '2015-08-18'</span> 
 last.date &lt;-<span class="st"> '2015-08-18'</span>
 
-type.output &lt;-<span class="st"> 'agg'</span> <span class="co"># aggregates data </span>
-agg.diff &lt;-<span class="st"> '5 min'</span> <span class="co"># interval for aggregation</span>
+type.output &lt;-<span class="st"> 'raw'</span> <span class="co"># aggregates data </span>
 
-my.assets &lt;-<span class="st"> 'PETR'</span> <span class="co"># all options related to Petrobras (partial matching)</span>
+my.assets &lt;-<span class="st"> 'PETR4F'</span> <span class="co"># all options related to Petrobras (partial matching)</span>
 type.matching &lt;-<span class="st"> 'partial'</span> <span class="co"># finds tickers from my.assets using partial matching</span>
-type.market =<span class="st"> 'options'</span> <span class="co"># option market</span>
+type.market =<span class="st"> 'equity-odds'</span> <span class="co"># option market</span>
 type.data &lt;-<span class="st"> 'orders'</span> <span class="co"># order data</span>
 
 df.out &lt;-<span class="st"> </span><span class="kw">ghfd_get_HF_data</span>(<span class="dt">my.assets =</span>my.assets, 
@@ -101,8 +100,9 @@ df.out &lt;-<span class="st"> </span><span class="kw">ghfd_get_HF_data</span>(<s
                            <span class="dt">last.date =</span> last.date,
                            <span class="dt">first.time =</span> first.time,
                            <span class="dt">last.time =</span> last.time,
-                           <span class="dt">type.output =</span> type.output,
-                           <span class="dt">agg.diff =</span> agg.diff)</code></pre></div>
+                           <span class="dt">type.output =</span> type.output)
+                           
+df.lob &lt;-<span class="st"> </span><span class="kw">ghfd_build_lob</span>(df.out)</code></pre></div>
 
 
 
