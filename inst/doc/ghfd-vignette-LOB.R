@@ -4,14 +4,14 @@
 #  first.time <- '10:00:00'
 #  last.time <- '17:00:00'
 #  
-#  first.date <- '2015-08-18'
-#  last.date <- '2015-08-18'
+#  first.date <- '2016-08-18'
+#  last.date <- '2016-08-18'
 #  
 #  type.output <- 'raw' # aggregates data
 #  
-#  my.assets <- 'PETR4F' # all options related to Petrobras (partial matching)
-#  type.matching <- 'partial' # finds tickers from my.assets using partial matching
-#  type.market = 'equity-odds' # option market
+#  my.assets <- 'PETR4F'
+#  type.matching <- 'exact'
+#  type.market = 'equity-odds'
 #  type.data <- 'orders' # order data
 #  
 #  df.out <- ghfd_get_HF_data(my.assets =my.assets,

@@ -12,7 +12,7 @@
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2017-09-10" />
+<meta name="date" content="2017-11-28" />
 
 <title>Recreating the LOB (limit order book)</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Recreating the LOB (limit order book)</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2017-09-10</em></h4>
+<h4 class="date"><em>2017-11-28</em></h4>
 
 
 
@@ -82,14 +82,14 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 first.time &lt;-<span class="st"> '10:00:00'</span>
 last.time &lt;-<span class="st"> '17:00:00'</span>
 
-first.date &lt;-<span class="st"> '2015-08-18'</span> 
-last.date &lt;-<span class="st"> '2015-08-18'</span>
+first.date &lt;-<span class="st"> '2016-08-18'</span> 
+last.date &lt;-<span class="st"> '2016-08-18'</span>
 
 type.output &lt;-<span class="st"> 'raw'</span> <span class="co"># aggregates data </span>
 
-my.assets &lt;-<span class="st"> 'PETR4F'</span> <span class="co"># all options related to Petrobras (partial matching)</span>
-type.matching &lt;-<span class="st"> 'partial'</span> <span class="co"># finds tickers from my.assets using partial matching</span>
-type.market =<span class="st"> 'equity-odds'</span> <span class="co"># option market</span>
+my.assets &lt;-<span class="st"> 'PETR4F'</span> 
+type.matching &lt;-<span class="st"> 'exact'</span> 
+type.market =<span class="st"> 'equity-odds'</span> 
 type.data &lt;-<span class="st"> 'orders'</span> <span class="co"># order data</span>
 
 df.out &lt;-<span class="st"> </span><span class="kw">ghfd_get_HF_data</span>(<span class="dt">my.assets =</span>my.assets, 

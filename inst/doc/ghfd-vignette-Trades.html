@@ -12,7 +12,7 @@
 
 <meta name="author" content="Marcelo Perlin" />
 
-<meta name="date" content="2017-09-10" />
+<meta name="date" content="2017-11-28" />
 
 <title>Downloading and aggregating trade data from Bovespa</title>
 
@@ -70,7 +70,7 @@ code > span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Inf
 
 <h1 class="title toc-ignore">Downloading and aggregating trade data from Bovespa</h1>
 <h4 class="author"><em>Marcelo Perlin</em></h4>
-<h4 class="date"><em>2017-09-10</em></h4>
+<h4 class="date"><em>2017-11-28</em></h4>
 
 
 
@@ -118,13 +118,13 @@ df.tickers &lt;-<span class="st"> </span><span class="kw">ghfd_get_available_tic
 ## 4 VALEL43   679
 ## 5 PETRL70   514
 ## 6 PETRX80   507
-##                                                                        f.name
-## 1 /tmp/RtmpsqCqOs/Rinst3bd718067d00/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 2 /tmp/RtmpsqCqOs/Rinst3bd718067d00/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 3 /tmp/RtmpsqCqOs/Rinst3bd718067d00/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 4 /tmp/RtmpsqCqOs/Rinst3bd718067d00/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 5 /tmp/RtmpsqCqOs/Rinst3bd718067d00/GetHFData/extdata/NEG_OPCOES_20151126.zip
-## 6 /tmp/RtmpsqCqOs/Rinst3bd718067d00/GetHFData/extdata/NEG_OPCOES_20151126.zip</code></pre>
+##                                                                      f.name
+## 1 /tmp/RtmpIqRjVN/Rinst228c5515a5/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 2 /tmp/RtmpIqRjVN/Rinst228c5515a5/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 3 /tmp/RtmpIqRjVN/Rinst228c5515a5/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 4 /tmp/RtmpIqRjVN/Rinst228c5515a5/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 5 /tmp/RtmpIqRjVN/Rinst228c5515a5/GetHFData/extdata/NEG_OPCOES_20151126.zip
+## 6 /tmp/RtmpIqRjVN/Rinst228c5515a5/GetHFData/extdata/NEG_OPCOES_20151126.zip</code></pre>
 <p>In <code>df.tickers</code> one can find the symbols available in the file and also the number of trades for each. Now, lets take the 3 most traded instruments in that day and check the result of the import process:</p>
 <div class="sourceCode"><pre class="sourceCode r"><code class="sourceCode r">my.assets &lt;-<span class="st"> </span>df.tickers<span class="op">$</span>tickers[<span class="dv">1</span><span class="op">:</span><span class="dv">3</span>] <span class="co"># ticker to find in zip file</span>
 
