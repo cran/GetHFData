@@ -61,11 +61,18 @@ ghfd_get_ftp_contents <- function(type.market = 'equity',
                                     dirlistonly = TRUE)
     })
 
-    if (type.data =='trades'){
+    if (type.data == 'trades') {
       # filter ftp files for trades
-      pattern.files <- 'NEG_(.*?).zip'
-    } else if (type.data == 'orders') {
-      pattern.files <- 'OFER_(.*?).zip'
+      # pattern.files <- 'NEG_(.*).zip'
+
+      # Fix for issue 5: https://github.com/msperlin/GetHFData/issues/5
+
+      pattern.files <- 'NEG_(.*)'
+    }
+    else if (type.data == 'orders') {
+      # pattern.files <- 'OFER_(.*).zip'
+      # Fix for issue 5: https://github.com/msperlin/GetHFData/issues/5
+      pattern.files <- 'OFER_(.*)'
     }
 
     files.at.ftp <- stringr::str_extract_all(files.at.ftp,
